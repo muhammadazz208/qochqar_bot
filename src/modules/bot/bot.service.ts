@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { Bot, Context, InlineKeyboard } from "grammy";
-import { UserService } from '../users/users.service';
 import { ramazonTaqvim } from 'src/databasa/ramadan';
 
 import * as dotenv from 'dotenv';
@@ -10,7 +9,7 @@ dotenv.config();
 export class BotService {
   private bot: Bot;
 
-  constructor(private readonly userService: UserService) {
+  constructor() {
     if (!process.env.BOT_TOKEN) {
       throw new Error("BOT_TOKEN is missing in .env file");
     }
@@ -18,17 +17,6 @@ export class BotService {
     this.bot = new Bot(process.env.BOT_TOKEN);
 
     this.bot.command('start', async (ctx) => {
-      if (!ctx.from) return;
-
-      const user = ctx.from;
-
-      await this.userService.createOrUpdateUser({
-        telegram_id: user.id,
-        username: user.username || '',
-        first_name: user.first_name,
-        last_name: user.last_name || '',
-        is_bot: user.is_bot,
-      });
 
       await ctx.reply("Hi bro! Wassup? From now on you are a member of 'the Qo'chqar'. Try /help");
     });
